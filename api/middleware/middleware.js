@@ -1,4 +1,3 @@
-const posts = require('../posts/posts-model')
 const users = require('../users/users-model')
 
 function logger(req, res, next) {

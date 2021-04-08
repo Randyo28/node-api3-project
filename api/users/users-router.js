@@ -1,7 +1,7 @@
 // You will need `users-model.js` and `posts-model.js` both
 // The middleware functions also need to be required
 const express = require('express')
-const users = require('../users/users-model')
+const users = require('./users-model')
 const posts = require('../posts/posts-model')
 
 const {
@@ -38,9 +38,7 @@ router.post('/', validateUser, (req, res, next) => {
     .then((user) => {
       res.status(201).json(user)
     })
-    .catch((err) => {
-      next(err)
-    })
+    .catch(next)
 })
 
 router.put('/:id', validateUserId, validateUser, (req, res, next) => {
@@ -52,8 +50,11 @@ router.put('/:id', validateUserId, validateUser, (req, res, next) => {
 
   users
     .update(id, changes)
+    .then(() => {
+      return users.getById(id)
+    })
     .then((user) => {
-      res.status(200).json(user)
+      res.json(user)
     })
     .catch((err) => {
       next(err)
@@ -67,8 +68,8 @@ router.delete('/:id', validateUserId, (req, res, next) => {
 
   users
     .remove(id)
-    .then((user) => {
-      res.status(200).json(user)
+    .then(() => {
+      res.status(200).json(req.user)
     })
     .catch((err) => {
       next(err)
@@ -108,8 +109,8 @@ router.post('/:id/posts', validateUserId, validatePost, (req, res, next) => {
 
 router.use((err, req, res, next) => {
   res.status(500).json({
-    message: 'Something failed',
-    error: err.message,
+    customMessage: 'Something failed',
+    message: err.message,
   })
 })
 
