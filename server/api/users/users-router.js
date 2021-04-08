@@ -1,5 +1,3 @@
-// You will need `users-model.js` and `posts-model.js` both
-// The middleware functions also need to be required
 const express = require('express')
 const users = require('./users-model')
 const posts = require('../posts/posts-model')
@@ -24,14 +22,10 @@ router.get('/', (req, res, next) => {
 })
 
 router.get('/:id', validateUserId, (req, res) => {
-  // RETURN THE USER OBJECT
-  // this needs a middleware to verify user id
   res.status(200).json(req.user)
 })
 
 router.post('/', validateUser, (req, res, next) => {
-  // RETURN THE NEWLY CREATED USER OBJECT
-  // this needs a middleware to check that the request body is valid
   const newUser = req.body
   users
     .insert(newUser)
@@ -42,9 +36,6 @@ router.post('/', validateUser, (req, res, next) => {
 })
 
 router.put('/:id', validateUserId, validateUser, (req, res, next) => {
-  // RETURN THE FRESHLY UPDATED USER OBJECT
-  // this needs a middleware to verify user id
-  // and another middleware to check that the request body is valid
   const { id } = req.params
   const changes = req.body
 
@@ -62,8 +53,6 @@ router.put('/:id', validateUserId, validateUser, (req, res, next) => {
 })
 
 router.delete('/:id', validateUserId, (req, res, next) => {
-  // RETURN THE FRESHLY DELETED USER OBJECT
-  // this needs a middleware to verify user id
   const { id } = req.params
 
   users
@@ -77,8 +66,6 @@ router.delete('/:id', validateUserId, (req, res, next) => {
 })
 
 router.get('/:id/posts', validateUserId, (req, res, next) => {
-  // RETURN THE ARRAY OF USER POSTS
-  // this needs a middleware to verify user id
   const { id } = req.params
 
   users
@@ -92,9 +79,6 @@ router.get('/:id/posts', validateUserId, (req, res, next) => {
 })
 
 router.post('/:id/posts', validateUserId, validatePost, (req, res, next) => {
-  // RETURN THE NEWLY CREATED USER POST
-  // this needs a middleware to verify user id
-  // and another middleware to check that the request body is valid
   const postInfo = { ...req.body, user_id: req.params.id }
 
   posts
@@ -114,5 +98,4 @@ router.use((err, req, res, next) => {
   })
 })
 
-// do not forget to export the router
 module.exports = router
