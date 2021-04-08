@@ -12,7 +12,7 @@ const {
 
 const router = express.Router()
 
-router.get('/', (req, res) => {
+router.get('/', (req, res, next) => {
   users
     .get()
     .then((user) => {
@@ -29,7 +29,7 @@ router.get('/:id', validateUserId, (req, res) => {
   res.status(200).json(req.user)
 })
 
-router.post('/', validateUser, (req, res) => {
+router.post('/', validateUser, (req, res, next) => {
   // RETURN THE NEWLY CREATED USER OBJECT
   // this needs a middleware to check that the request body is valid
   const newUser = req.body
@@ -43,7 +43,7 @@ router.post('/', validateUser, (req, res) => {
     })
 })
 
-router.put('/:id', validateUserId, validateUser, (req, res) => {
+router.put('/:id', validateUserId, validateUser, (req, res, next) => {
   // RETURN THE FRESHLY UPDATED USER OBJECT
   // this needs a middleware to verify user id
   // and another middleware to check that the request body is valid
@@ -60,7 +60,7 @@ router.put('/:id', validateUserId, validateUser, (req, res) => {
     })
 })
 
-router.delete('/:id', validateUserId, (req, res) => {
+router.delete('/:id', validateUserId, (req, res, next) => {
   // RETURN THE FRESHLY DELETED USER OBJECT
   // this needs a middleware to verify user id
   const { id } = req.params
@@ -75,7 +75,7 @@ router.delete('/:id', validateUserId, (req, res) => {
     })
 })
 
-router.get('/:id/posts', validateUserId, (req, res) => {
+router.get('/:id/posts', validateUserId, (req, res, next) => {
   // RETURN THE ARRAY OF USER POSTS
   // this needs a middleware to verify user id
   const { id } = req.params
@@ -90,7 +90,7 @@ router.get('/:id/posts', validateUserId, (req, res) => {
     })
 })
 
-router.post('/:id/posts', validateUserId, validatePost, (req, res) => {
+router.post('/:id/posts', validateUserId, validatePost, (req, res, next) => {
   // RETURN THE NEWLY CREATED USER POST
   // this needs a middleware to verify user id
   // and another middleware to check that the request body is valid
