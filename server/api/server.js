@@ -12,7 +12,7 @@ server.use(morgan('dev'))
 server.use(cors())
 server.use('/api/users', logger, userRouter)
 
-server.get('/', (req, res) => {
+server.use('/', (req, res) => {
   res.send(`<h2>Let's write some middleware!</h2>`)
 })
 
