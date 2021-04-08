@@ -81,8 +81,8 @@ router.get('/:id/posts', validateUserId, (req, res, next) => {
   // this needs a middleware to verify user id
   const { id } = req.params
 
-  posts
-    .getById(id)
+  users
+    .getUserPosts(id)
     .then((post) => {
       res.status(200).json(post)
     })
