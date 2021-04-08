@@ -18,8 +18,8 @@ router.get('/', (req, res) => {
     .then((user) => {
       res.status(200).json(user)
     })
-    .catch(() => {
-      res.status(500).json({ message: 'Error getting users' })
+    .catch((err) => {
+      next(err)
     })
 })
 
@@ -38,8 +38,8 @@ router.post('/', validateUser, (req, res) => {
     .then((user) => {
       res.status(201).json(user)
     })
-    .catch(() => {
-      res.status(500).json({ message: "Can't post new user" })
+    .catch((err) => {
+      next(err)
     })
 })
 
@@ -55,8 +55,8 @@ router.put('/:id', validateUserId, validateUser, (req, res) => {
     .then((user) => {
       res.status(200).json(user)
     })
-    .catch(() => {
-      res.status(500).json({ message: 'Error' })
+    .catch((err) => {
+      next(err)
     })
 })
 
@@ -70,8 +70,8 @@ router.delete('/:id', validateUserId, (req, res) => {
     .then((user) => {
       res.status(200).json(user)
     })
-    .catch(() => {
-      res.status(500).json({ message: 'Error with deleting user' })
+    .catch((err) => {
+      next(err)
     })
 })
 
@@ -85,8 +85,8 @@ router.get('/:id/posts', validateUserId, (req, res) => {
     .then((post) => {
       res.status(200).json(post)
     })
-    .catch(() => {
-      res.status(500).json({ message: 'Error getting posts' })
+    .catch((err) => {
+      next(err)
     })
 })
 
@@ -94,17 +94,23 @@ router.post('/:id/posts', validateUserId, validatePost, (req, res) => {
   // RETURN THE NEWLY CREATED USER POST
   // this needs a middleware to verify user id
   // and another middleware to check that the request body is valid
-  const { id } = req.params
-  const create = req.body
+  const postInfo = { ...req.body, user_id: req.params.id }
 
   posts
-    .insert(id, create)
+    .insert(postInfo)
     .then((post) => {
       res.status(200).json(post)
     })
-    .catch(() => {
-      res.status(500).json({ message: "Can't post comment" })
+    .catch((err) => {
+      next(err)
     })
+})
+
+router.use((err, req, res, next) => {
+  res.status(500).json({
+    message: 'Something failed',
+    error: err.message,
+  })
 })
 
 // do not forget to export the router
